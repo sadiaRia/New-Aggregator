@@ -105,13 +105,8 @@ const extractNamedEntities = (text) => {
     };
 };
 
-//Api for extracting the article from RSSFeed
-const extractArticleFromFeed = async (req, res) => {
-    let query = req.query || {};
-    query.deleted = false;
-    query.isUrlRetrieved = false;
 
-    try {
+const extractArticle = async (query) => {
         const rssFeedUrls = await RSSFeed.distinct('url', query);
         let ret = [];
         for (const url of rssFeedUrls) {
@@ -133,13 +128,25 @@ const extractArticleFromFeed = async (req, res) => {
                 await article.save();
 
             }
-          await RSSFeed.findOneAndUpdate(
+            await RSSFeed.findOneAndUpdate(
                 {url: url},
                 {isUrlRetrieved: true},
                 {new: true}
             );
             ret.push(url);
         }
+        return ret;
+    }
+
+
+//Api for extracting the article from RSSFeed
+const extractArticleFromFeed = async (req, res) => {
+    let query = req.query || {};
+    query.deleted = false;
+    query.isUrlRetrieved = false;
+
+    try {
+        let ret = await extractArticle(query);
         return res.status(200).send(`Saved article from ${ret}`);
 
     } catch (error) {
@@ -153,5 +160,6 @@ module.exports = {
     getRssFeed,
     removeRssFeed,
     listRssFeeds,
-    extractArticleFromFeed
+    extractArticleFromFeed,
+    extractArticle
 }

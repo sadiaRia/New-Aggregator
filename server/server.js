@@ -14,6 +14,7 @@ const server = http.createServer(app);
 const env = process.env.NODE_ENV || "development";
 
 app.use(express.static("dist"));
+const publicPath = path.resolve(__dirname, '..', '..', 'public');
 
 app.use(
     cors({
@@ -78,6 +79,10 @@ server.listen(process.env.PORT || 9000, (err) => {
       require(`./config/routes/${file}`)(app)
   );
 });
+
+app.use(express.static(publicPath));
+require('./tasks').startTasks();
+
 
 router.get("/_status", (req, res) => {
   res.send("ok");
