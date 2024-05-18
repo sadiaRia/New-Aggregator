@@ -24,4 +24,6 @@ module.exports = (app) => {
         "/rssFeed/:url",
         utils.wrapAsync(RssFeed.removeRssFeed)
     );
+
+    app.get('/rssFeed/extract/article', utils.wrapAsync(RssFeed.extractArticleFromFeed))
 };
