@@ -105,7 +105,7 @@ const extractNamedEntities = (text) => {
     };
 };
 
-
+//Api for extracting the article from RSSFeed
 const extractArticleFromFeed = async (req, res) => {
     let query = req.query || {};
     query.deleted = false;
@@ -113,17 +113,14 @@ const extractArticleFromFeed = async (req, res) => {
 
     try {
         const rssFeedUrls = await RSSFeed.distinct('url', query);
-        console.log(rssFeedUrls);
         let ret = [];
         for (const url of rssFeedUrls) {
             const feed = await parser.parseURL(url);
             for (const item of feed.items) {
-                console.log(item.contentSnippet);
-                // const topics = await extractTopicsFromOpenAI(item.contentSnippet);
+                // const topics = await extractTopicsFromOpenAI(item.contentSnippet); // extracting the topic using open ai model if you want to use it please provide apiKey in env.development file
                 const topics = await extractTopicsFromKeyWord(item.contentSnippet);
 
                 const entities = extractNamedEntities(item.contentSnippet);
-                console.log('namedEntities', entities);
 
                 const article = new Article({
                     title: item.title,
