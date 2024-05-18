@@ -1,6 +1,7 @@
 # New-Aggregator
 This program aggregates news articles from various RSS feeds, extracts topics and named entities, and stores the data in MongoDB.
 It provides functionalities to filter articles based on keywords or publication date and schedules periodic fetching of new articles.
+RSS FEED URL - https://feeds.megaphone.fm/newheights
 
 
 ## Features
